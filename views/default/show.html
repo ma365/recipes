@@ -1,0 +1,42 @@
+{{extend 'layout.html'}}
+<div class="media">
+  <a class="pull-left" href="#">
+    <img class="media-object thumbnail" src="{{=URL('download', args=recipe.image)}}" />
+      {{if recipe.created_by == auth.user_id:}}
+      {{=SPAN(A(I(_class="icon-pencil"),' Edit', _href=URL('edit', args=request.args), _class="label label-success"))}}
+       {{=SPAN(A(I(_class="icon-trash"),' Delete', _href=URL('delete', args=request.args), _class="label label-success"))}}
+      {{pass}}
+  </a>
+  <div class="media-body">
+    <h1 class="media-heading">{{=recipe.title}}</h1>
+    Posted on {{=recipe.created_on}}
+ 
+    <!-- Nested media object -->
+    <div class="media">
+        <blockquote>{{=XML(recipe.description)}}</blockquote>
+        <h3>
+            Directions
+        </h3>
+        <div class="well well-large">{{=XML(recipe.directions)}}</div>
+        {{if len(comments):}}
+        <h2>Comments</h2><br /><p>
+
+        {{for comment in comments:}}
+
+        <p>{{=db.auth_user[comment.created_by].first_name}} says <i>{{=comment.body}}</i></p>
+
+        {{pass}}</p>
+
+        {{else:}}
+
+        <span class="alert">No comments posted yet</span>
+
+        {{pass}}
+
+        <h2>Post a comment</h2>
+
+        {{=form}}
+
+    </div>
+  </div>
+</div>
